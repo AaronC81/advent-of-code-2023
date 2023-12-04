@@ -17,19 +17,24 @@ Game = Struct.new('Game', :id, :reveals) do
         Game.new(id.to_i, reveals)
     end
 
-    def max_seen_of_colours
-        result = {}
+    # "Rotates" each reveal into a single hash, for example:
+    #   [{ red: 12, green: 4 }, { red: 11, blue: 7, green: 2 }]
+    # into:
+    #   { red: [12, 11], blue: [0, 7], green: [4, 2] }
+    def all_reveals_for_colours
+        result = reveals.flat_map(&:keys).map { [_1, []] }.to_h
 
         reveals.each do |reveal|
             reveal.each do |colour, num|
-                if result[colour] == nil || result[colour] < num
-                    result[colour] = num
-                end
+                result[colour] << num
             end
         end
 
         result
     end
+
+    # The most seen of each colour of cube, across all reveals
+    def max_seen_of_colours = all_reveals_for_colours.to_h { |colour, nums| [colour, nums.max] }
 end
 
 def part_1(input)
@@ -43,6 +48,15 @@ def part_1(input)
     possible_games.map(&:id).sum
 end
 
+def part_2(input)
+    games = input.split("\n").map { Game.parse(_1) }
+
+    games
+        .map { _1.max_seen_of_colours.values.inject(1, :*) }
+        .sum
+end
+
+
 input = File.read(File.join(__dir__, '..', 'input', 'day2'))
 
-p part_1(input)
+p part_2(input)
