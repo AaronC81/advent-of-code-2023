@@ -1,8 +1,8 @@
-input = File.read(File.join(__dir__, '..', 'input', 'day1'))
+require_relative '../utils/aoc'
 
-def part_1(input)
+def part_1
     calibration_values =
-        input.split("\n").map do |line|
+        AoC.input_lines do |line|
             digits_on_line = line.chars
                 .map { Integer(_1) rescue nil }
                 .compact
@@ -13,7 +13,7 @@ def part_1(input)
     calibration_values.sum
 end
 
-def part_2(input)
+def part_2
     digit_words = {
         "one" => 1,
         "two" => 2,
@@ -27,7 +27,7 @@ def part_2(input)
     }
 
     calibration_values =
-        input.split("\n").map do |line|
+        AoC.input_lines do |line|
             # Find the first digit
             first_digit = line.chars.each.with_index do |c, i|
                 if (Integer(c) rescue false)
@@ -52,4 +52,5 @@ def part_2(input)
     calibration_values.sum
 end
 
-puts part_2(input)
+puts part_1
+puts part_2

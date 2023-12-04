@@ -1,3 +1,5 @@
+require_relative '../utils/aoc'
+
 Game = Struct.new('Game', :id, :reveals) do
     def self.parse(input)
         # Format:
@@ -37,8 +39,8 @@ Game = Struct.new('Game', :id, :reveals) do
     def max_seen_of_colours = all_reveals_for_colours.to_h { |colour, nums| [colour, nums.max] }
 end
 
-def part_1(input)
-    games = input.split("\n").map { Game.parse(_1) }
+def part_1
+    games = AoC.input_lines { Game.parse(_1) }
 
     possible_games = games.filter do |game|
         maxes = game.max_seen_of_colours
@@ -48,15 +50,11 @@ def part_1(input)
     possible_games.map(&:id).sum
 end
 
-def part_2(input)
-    games = input.split("\n").map { Game.parse(_1) }
-
-    games
+def part_2
+    AoC
+        .input_lines { Game.parse(_1) }
         .map { _1.max_seen_of_colours.values.inject(1, :*) }
         .sum
 end
 
-
-input = File.read(File.join(__dir__, '..', 'input', 'day2'))
-
-p part_2(input)
+p part_2
